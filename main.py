@@ -68,6 +68,8 @@ class Game:
                 #     self.player = Player(self, col, row)
                 if tile == 'C':
                     Coin(self, col, row)
+                if tile == 'U':
+                    PowerUp(self, col, row)
    
     # Runs our game
     def run(self):
