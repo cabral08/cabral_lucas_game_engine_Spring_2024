@@ -54,6 +54,9 @@ class Game:
         self.walls = pg.sprite.Group()
         self.player1 = Player(self, 1, 1)
         self.all_sprites.add(self.player1)
+        self.powerups = pg.sprite.Group()
+        self.coins = pg.sprite.Group()
+        self.power_ups = pg.sprite.Group()
         for row, tiles in enumerate(self.map_data):
             print(row)
             for col, tile in enumerate(tiles):
@@ -61,6 +64,10 @@ class Game:
                 if tile == '1':
                     print("a wall at", row, col)
                     Wall(self, col, row)
+                # if tile == 'P':
+                #     self.player = Player(self, col, row)
+                if tile == 'C':
+                    Coin(self, col, row)
    
     # Runs our game
     def run(self):

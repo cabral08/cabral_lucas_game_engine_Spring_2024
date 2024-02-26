@@ -59,8 +59,9 @@ class Player(pg.sprite.Sprite):
                     self.x = hits[0].rect.left - self.rect.width 
                 if self.vx < 0:
                     self.x = hits[0].rect.right
-                    self.vx = 0
-                    self.rect.x = self.x      
+                    # When I pressed s and d i went through walls but I switched the indentation to fix it
+                self.vx = 0
+                self.rect.x = self.x      
         if dir == 'y':
             hits = pg.sprite.spritecollide(self, self.game.walls, False)
             if hits:
@@ -68,8 +69,44 @@ class Player(pg.sprite.Sprite):
                     self.y = hits[0].rect.top - self.rect.height
                 if self.vy < 0:
                     self.y = hits[0].rect.bottom
-                    self.vy = 0
-                    self.rect.y = self.y     
+                self.vy = 0
+                self.rect.y = self.y 
+    # made possible by Aayush's question!!!!
+    def collide_with_group(self, group, kill):
+        hits = pg.sprite.spritecollide(self, group, kill)
+        if hits:
+            if str(hits[0].__class__.__name__) == "Coin":
+                self.moneybag += 1
+
+    def collide_with_group(self, group, kill):
+        hits = pg.sprite.spritecollide(self, group, kill)
+        if hits: return True
+
+    def collide_with_powerup(self, dir):
+        if dir == 'x':
+            hits = pg.sprite.spritecollide(self, self.game.powerups, True)
+            if hits:
+                if self.vx > 0:
+                    self.x = hits[0].rect.left - self.rect.width 
+                if self.vx < 0:
+                    self.x = hits[0].rect.right
+                    self.vx = 0
+                    self.rect.x = self.x  
+
+
+        if dir == 'y':
+            hits = pg.sprite.spritecollide(self, self.game.powerups, True)
+        if hits:
+                 if self.vy > 0:
+                   self.y = hits[0].rect.top - self.rect.height
+                 if self.vy < 0:
+                  self.y = hits[0].rect.bottom
+                  self.vy = 0
+                  self.rect.y = self.y 
+
+
+
+
 
     def update(self):
         self.get_keys()
@@ -78,9 +115,16 @@ class Player(pg.sprite.Sprite):
         self.rect.x = self.x 
         # add collision later
         self.collide_with_walls('x')
+        self.collide_with_powerup('x')
         self.rect.y = self.y 
         # add collision later
         self.collide_with_walls('y')
+        self.collide_with_powerup('y')
+        self.collide_with_group(self.game.coins, True)
+        # if self.collide_with_group(self.game.powerups, True):
+        #     self.score += 1
+        self.collide_with_group(self.game.power_ups, True)
+        
 
 class Wall(pg.sprite.Sprite):
      def __init__(self, game, x, y):
@@ -89,6 +133,33 @@ class Wall(pg.sprite.Sprite):
             self.game = game
             self.image = pg.Surface((TILESIZE, TILESIZE))
             self.image.fill(BROWN)
+            self.rect = self.image.get_rect()
+            self.x = x
+            self.y = y
+            self.rect.x = x * TILESIZE
+            self.rect.y = y * TILESIZE
+
+# create new class for coin
+class Coin(pg.sprite.Sprite):
+     def __init__(self, game, x, y):
+            self.groups = game.all_sprites, game.coins
+            pg.sprite.Sprite.__init__(self, self.groups)
+            self.game = game
+            self.image = pg.Surface((TILESIZE, TILESIZE))
+            self.image.fill(YELLOW)
+            self.rect = self.image.get_rect()
+            self.x = x
+            self.y = y
+            self.rect.x = x * TILESIZE
+            self.rect.y = y * TILESIZE
+
+class PowerUp(pg.sprite.Sprite):
+     def __init__(self, game, x, y):
+            self.groups = game.all_sprites, game.power_ups
+            pg.sprite.Sprite.__init__(self, self.groups)
+            self.game = game
+            self.image = pg.Surface((TILESIZE, TILESIZE))
+            self.image.fill(YELLOW)
             self.rect = self.image.get_rect()
             self.x = x
             self.y = y
