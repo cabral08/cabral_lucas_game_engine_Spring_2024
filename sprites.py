@@ -83,10 +83,6 @@ class Player(pg.sprite.Sprite):
                 print(hits[0].__class__.__name__)
                 self.speed += 300
 
-    def collide_with_group(self, group, kill):
-        hits = pg.sprite.spritecollide(self, group, kill)
-        if hits: return True
-
     def collide_with_powerup(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.powerups, True)
@@ -120,11 +116,11 @@ class Player(pg.sprite.Sprite):
         self.rect.x = self.x 
         # add collision later
         self.collide_with_walls('x')
-        self.collide_with_powerup('x')
+        # self.collide_with_powerup('x')
         self.rect.y = self.y 
         # add collision later
         self.collide_with_walls('y')
-        self.collide_with_powerup('y')
+        # self.collide_with_powerup('y')
         self.collide_with_group(self.game.coins, True)
         # if self.collide_with_group(self.game.powerups, True):
         #     self.score += 1
