@@ -1,6 +1,6 @@
 # This file was created by: Lucas Cabral
-
-
+# Added this comment to prove github is working
+# new stuff
 # Importing Modules
 import pygame as pg 
 from settings import *
