@@ -58,7 +58,7 @@ class Game:
         self.coins = pg.sprite.Group()
         self.power_ups = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
-        # self.killwall = pg.sprite.Group()
+        self.killwall = pg.sprite.Group()
         for row, tiles in enumerate(self.map_data):
             print(row)
             for col, tile in enumerate(tiles):
@@ -66,11 +66,12 @@ class Game:
                 if tile == '1':
                     print("a wall at", row, col)
                     Wall(self, col, row)
-                # if tile == 'K':
-                #     print("death at", row, col)
-                #     KillWall(self, col, row)
-                # if tile == 'P':
-                #     self.player = Player(self, col, row)
+                if tile == 'K':
+                    print("death at", row, col)
+                    KillWall(self, col, row)
+                # spawns another player, but there are two
+                if tile == 'P':
+                    self.player = Player(self, col, row)
                 if tile == 'C':
                     Coin(self, col, row)
                 if tile == 'U':

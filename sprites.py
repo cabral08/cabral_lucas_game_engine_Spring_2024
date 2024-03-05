@@ -86,9 +86,9 @@ class Player(pg.sprite.Sprite):
             if str(hits[0].__class__.__name__) == "PowerUp":
                 print(hits[0].__class__.__name__)
                 self.speed += 300
-            # if str(hits[0].__class__.__name__) == "KillWall":
-            #     print(hits[0].__class__.__name__)
-            #     self.kill()
+            if str(hits[0].__class__.__name__) == "KillWall":
+                print(hits[0].__class__.__name__)
+                self.kill()
             if str(hits[0].__class__.__name__) == "Mob":
                 print(hits[0].__class__.__name__)
                 print("Collided with mob")
@@ -116,9 +116,9 @@ class Player(pg.sprite.Sprite):
                   self.rect.y = self.y 
 
 
-    # def kill(self):
-    #     self.x = self.game.Pcol*TILESIZE
-    #     self.y = self.game.Prow*TILESIZE
+    def kill(self):
+        self.x = self.game.Pcol*TILESIZE
+        self.y = self.game.Prow*TILESIZE
 
 
     def update(self):
@@ -137,7 +137,7 @@ class Player(pg.sprite.Sprite):
         # if self.collide_with_group(self.game.powerups, True):
         #     self.score += 1
         self.collide_with_group(self.game.power_ups, True)
-        # self.collide_with_group(self.game.killwall, False)
+        self.collide_with_group(self.game.killwall, False)
         self.collide_with_group(self.game.mobs, False)
 
         
@@ -155,19 +155,19 @@ class Wall(pg.sprite.Sprite):
             self.rect.x = x * TILESIZE
             self.rect.y = y * TILESIZE
 
-# class KillWall(pg.sprite.Sprite):
      
-#      def __init__(self, game, x, y):
-#             self.groups = game.all_sprites, game.killwall
-#             pg.sprite.Sprite.__init__(self, self.groups)
-#             self.game = game
-#             self.image = pg.Surface((TILESIZE, TILESIZE))
-#             self.image.fill(YELLOW)
-#             self.rect = self.image.get_rect()
-#             self.x = x
-#             self.y = y
-#             self.rect.x = x * TILESIZE
-#             self.rect.y = y * TILESIZE
+class KillWall(pg.sprite.Sprite):
+     def __init__(self, game, x, y):
+            self.groups = game.all_sprites, game.killwall
+            pg.sprite.Sprite.__init__(self, self.groups)
+            self.game = game
+            self.image = pg.Surface((TILESIZE, TILESIZE))
+            self.image.fill(LIGHTGREY)
+            self.rect = self.image.get_rect()
+            self.x = x
+            self.y = y
+            self.rect.x = x * TILESIZE
+            self.rect.y = y * TILESIZE
 
         
 
