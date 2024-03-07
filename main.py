@@ -52,8 +52,7 @@ class Game:
         # create player
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-        self.player1 = Player(self, 1, 1)
-        self.all_sprites.add(self.player1)
+        #self.all_sprites.add(self.player1)
         self.powerups = pg.sprite.Group()
         self.coins = pg.sprite.Group()
         self.power_ups = pg.sprite.Group()
@@ -70,14 +69,14 @@ class Game:
                     print("death at", row, col)
                     KillWall(self, col, row)
                 # spawns another player, but there are two
-                if tile == 'P':
-                    self.player = Player(self, col, row)
                 if tile == 'C':
                     Coin(self, col, row)
                 if tile == 'U':
                     PowerUp(self, col, row)
                 if tile == 'M':
                     Mob(self, col, row)
+                if tile == 'P':
+                    self.player1 = Player(self, col, row)
    
     # Runs our game
     def run(self):
