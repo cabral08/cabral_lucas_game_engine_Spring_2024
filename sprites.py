@@ -2,6 +2,7 @@
 #  This code was inspired by Zelda and informed by Chris Bradfield
 import pygame as pg
 from settings import *
+import os
 #  This allows us to import pygame and imports game settings
 
 
@@ -203,8 +204,12 @@ class Mob(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(PURPLE)
+
+        self.frame = 0
+        self.frameDelay = 0.2
+        self.frames = os.listdir('./images/')
+
+        self.image = pg.transform.scale(pg.image.load(f'./images/{self.frames[0]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
@@ -212,6 +217,8 @@ class Mob(pg.sprite.Sprite):
         self.x = x * TILESIZE
         self.y = y * TILESIZE
         self.speed = 1
+        
+
     def collide_with_walls(self, dir):
         if dir == 'x':
             # print('colliding on the x')
@@ -226,6 +233,11 @@ class Mob(pg.sprite.Sprite):
                 self.vy *= -1
                 self.rect.y = self.y
     def update(self):
+        if self.frameDelay <= 0:
+            self.frame = (self.frame + 1) % len(self.frames)
+            self.image = pg.transform.scale(pg.image.load(f'./images/{self.frames[self.frame]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
+            self.frameDelay = 0.2
+        self.frameDelay -= self.game.dt
         # self.rect.x += 1
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
