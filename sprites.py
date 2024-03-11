@@ -88,7 +88,7 @@ class Player(pg.sprite.Sprite):
                 self.speed += 300
             if str(hits[0].__class__.__name__) == "KillWall":
                 print(hits[0].__class__.__name__)
-                self.kill()
+                self.game.playing = False
             if str(hits[0].__class__.__name__) == "Mob":
                 print(hits[0].__class__.__name__)
                 print("Collided with mob")
@@ -116,9 +116,9 @@ class Player(pg.sprite.Sprite):
                   self.rect.y = self.y 
 
 
-    def kill(self):
-        self.x = self.game.Pcol*TILESIZE
-        self.y = self.game.Prow*TILESIZE
+    # def kill(self):
+    #     self.x = self.game.Pcol*TILESIZE
+    #     self.y = self.game.Prow*TILESIZE
 
 
     def update(self):
