@@ -8,6 +8,7 @@ from sprites import *
 from random import randint 
 import sys
 from os import path
+import os
 # Makes me able to import pictures and graphics
 
 
@@ -28,6 +29,8 @@ class Game:
     def load_data(self):
         game_folder = path.dirname(__file__)
         self.img_folder = path.join(game_folder, 'images')
+        self.snd_folder = path.join(game_folder, 'sounds')
+
         self.map_data = []
         # 'r'     open for reading (default)
         # 'w'     open for writing, truncating the file first

@@ -1,8 +1,10 @@
 #  This file was created by: Lucas Cabral
 #  This code was inspired by Zelda and informed by Chris Bradfield
+# import os
+import os
 import pygame as pg
 from settings import *
-import os
+from os import path
 #  This allows us to import pygame and imports game settings
 
 
@@ -149,12 +151,14 @@ class Wall(pg.sprite.Sprite):
             pg.sprite.Sprite.__init__(self, self.groups)
             self.game = game
             self.image = pg.Surface((TILESIZE, TILESIZE))
-            self.image.fill(BROWN)
+            # self.image.fill(BROWN)
+            self.image = pg.image.load(path.join(self.game.img_folder, 'wall.png')).convert_alpha()
             self.rect = self.image.get_rect()
             self.x = x
             self.y = y
-            self.rect.x = x * TILESIZE
-            self.rect.y = y * TILESIZE
+            self.rect.x = x * TILESIZE 
+            self.rect.y = y * TILESIZE 
+            
 
      
 class KillWall(pg.sprite.Sprite):
