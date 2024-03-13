@@ -152,12 +152,10 @@ class Wall(pg.sprite.Sprite):
             self.game = game
             self.image = pg.Surface((TILESIZE, TILESIZE))
             # self.image.fill(BROWN)
-            self.image = pg.image.load(path.join(self.game.img_folder, 'wall.png')).convert_alpha()
-            self.rect = self.image.get_rect()
-            self.x = x
-            self.y = y
-            self.rect.x = x * TILESIZE 
-            self.rect.y = y * TILESIZE 
+            self.image = pg.transform.scale(pg.image.load(path.join(self.game.img_folder, 'wall.png')).convert_alpha(), (TILESIZE, TILESIZE))
+            self.x = x*TILESIZE + TILESIZE/2
+            self.y = y*TILESIZE + TILESIZE/2
+            self.rect = self.image.get_rect(center=(self.x, self.y))
             
 
      
@@ -211,9 +209,9 @@ class Mob(pg.sprite.Sprite):
 
         self.frame = 0
         self.frameDelay = 0.2
-        self.frames = os.listdir('./images/')
+        self.frames = os.listdir('./images/mob')
 
-        self.image = pg.transform.scale(pg.image.load(f'./images/{self.frames[0]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
+        self.image = pg.transform.scale(pg.image.load(f'./images/mob/{self.frames[0]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
@@ -239,7 +237,7 @@ class Mob(pg.sprite.Sprite):
     def update(self):
         if self.frameDelay <= 0:
             self.frame = (self.frame + 1) % len(self.frames)
-            self.image = pg.transform.scale(pg.image.load(f'./images/{self.frames[self.frame]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
+            self.image = pg.transform.scale(pg.image.load(f'./images/mob/{self.frames[self.frame]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
             self.frameDelay = 0.2
         self.frameDelay -= self.game.dt
         # self.rect.x += 1
