@@ -16,6 +16,7 @@ YELLOW = (255, 255, 0)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 PURPLE = (80, 0, 80)
+ORANGE = (255, 165, 0)
 # adds the color for power up
 
 PLAYER_SPEED = 300

@@ -5,6 +5,8 @@ import os
 import pygame as pg
 from settings import *
 from os import path
+vec =pg.math.Vector2
+from pygame import Vector2
 #  This allows us to import pygame and imports game settings
 
 
@@ -234,6 +236,58 @@ class Mob(pg.sprite.Sprite):
             if hits:
                 self.vy *= -1
                 self.rect.y = self.y
+
+# created by Aayush edited by me
+class Mob2(pg.sprite.Sprite):
+    def __init__(self, game, target, x, y):
+        self.groups = game.all_sprites, game.mobs
+        # init superclass
+        pg.sprite.Sprite.__init__(self, self.groups)
+        # set game class
+        self.game = game
+        self.target = target
+        # Set dimensions
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        # Give color
+        self.image.fill(RED)
+        # Rectangular area of wall
+        self.rect = self.image.get_rect()
+        self.vx, vy = 0, 0
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+ 
+        self.speed = 5
+ 
+    def update(self):
+        self.vx, self.vy = (Vector2(self.target.rect.center) - Vector2(self.x, self.y)) / TILESIZE * self.speed
+       
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        self.rect.x = self.x
+        self.collide_with_walls('x')
+        self.rect.y = self.y
+        self.collide_with_walls('y')
+ 
+    def collide_with_walls(self, dir):
+        if dir == 'x':
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                if self.vx > 0:
+                    self.x = hits[0].rect.left - self.rect.width
+                if self.vx < 0:
+                    self.x = hits[0].rect.right
+                self.vx = 0
+                self.rect.x = self.x
+        if dir == 'y':
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                if self.vy > 0:
+                    self.y = hits[0].rect.top - self.rect.height
+                if self.vy < 0:
+                    self.y = hits[0].rect.bottom
+                self.vy = 0
+                self.rect.y = self.y
+
     def update(self):
         if self.frameDelay <= 0:
             self.frame = (self.frame + 1) % len(self.frames)
@@ -257,5 +311,3 @@ class Mob(pg.sprite.Sprite):
         self.rect.y = self.y
         self.collide_with_walls('y')
 
-
-           
