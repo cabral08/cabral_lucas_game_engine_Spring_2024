@@ -77,12 +77,12 @@ class Game:
                     Coin(self, col, row)
                 if tile == 'U':
                     PowerUp(self, col, row)
-                if tile == 'M':
-                    Mob2(self, col, row)
+                # if tile == 'M':
+                #     Mob2(self, col, row)
                 if tile == 'P':
                     self.player1 = Player(self, col, row)
-                # if tile == 'M':
-                #     Mob(self, col, row)
+                if tile == 'M':
+                    Mob(self, col, row)
    
     # Runs our game
     def run(self):
@@ -125,7 +125,7 @@ class Game:
                    self.quit()
     def show_start_screen(self):
         self.screen.fill(BGCOLOR)
-        self.draw_text(self.screen, "This is the start screen", 24, BLUE, WIDTH/2 - 32, 2)
+        self.draw_text(self.screen, "Press any button to play", 24, BLUE, WIDTH/2 - 32, 2)
         pg.display.flip()
         self.wait_for_key()
     
