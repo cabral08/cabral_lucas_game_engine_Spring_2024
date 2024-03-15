@@ -154,13 +154,14 @@ class Wall(pg.sprite.Sprite):
             self.game = game
             self.image = pg.Surface((TILESIZE, TILESIZE))
             # self.image.fill(BROWN)
+            # made a wall image: Project 5
             self.image = pg.transform.scale(pg.image.load(path.join(self.game.img_folder, 'wall.png')).convert_alpha(), (TILESIZE, TILESIZE))
             self.x = x*TILESIZE + TILESIZE/2
             self.y = y*TILESIZE + TILESIZE/2
             self.rect = self.image.get_rect(center=(self.x, self.y))
             
 
-     
+#  made a killwall: project 1
 class KillWall(pg.sprite.Sprite):
      def __init__(self, game, x, y):
             self.groups = game.all_sprites, game.killwall
@@ -202,13 +203,13 @@ class PowerUp(pg.sprite.Sprite):
             self.y = y
             self.rect.x = x * TILESIZE
             self.rect.y = y * TILESIZE
-# creating a mob class for an enemy
+# creating a mob class for an enemy: Project 2
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-
+# made aanimated sprite: Project 3
         self.frame = 0
         self.frameDelay = 0.2
         self.frames = os.listdir('./images/mob')

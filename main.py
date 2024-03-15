@@ -11,6 +11,12 @@ from os import path
 import os
 # Makes me able to import pictures and graphics
 
+'''
+mob
+killwall
+animated sprites
+start screen
+'''
 
 
 
@@ -123,6 +129,7 @@ class Game:
          for event in pg.event.get():
               if event.type == pg.QUIT:
                    self.quit()
+# made a start scree: Project 4
     def show_start_screen(self):
         self.screen.fill(BGCOLOR)
         self.draw_text(self.screen, "Press any button to play", 24, BLUE, WIDTH/2 - 32, 2)
