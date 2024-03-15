@@ -9,6 +9,7 @@ from random import randint
 import sys
 from os import path
 import os
+from math import floor
 # Makes me able to import pictures and graphics
 
 '''
@@ -18,7 +19,9 @@ animated sprites
 start screen
 '''
 
-
+# added levels for different maps
+LEVEL1 = "level1.txt"
+LEVEL2 = "level2.txt"
 
 # Creating the Base blueprint
 class Game:
@@ -33,9 +36,9 @@ class Game:
         # Boolean to check whether game is running or not
         self.load_data()
     def load_data(self):
-        game_folder = path.dirname(__file__)
-        self.img_folder = path.join(game_folder, 'images')
-        self.snd_folder = path.join(game_folder, 'sounds')
+        self.game_folder = path.dirname(__file__)
+        self.img_folder = path.join(self.game_folder, 'images')
+        self.snd_folder = path.join(self.game_folder, 'sounds')
 
         self.map_data = []
         # 'r'     open for reading (default)
@@ -53,10 +56,41 @@ class Game:
         It is used to ensure that a resource is properly closed or released 
         after it is used. This can help to prevent errors and leaks.
         '''
-        with open(path.join(game_folder, 'map.txt'), 'rt') as f:
+        with open(path.join(self.game_folder, 'lvl1.txt'), 'rt') as f:
             for line in f:
                 print(line)
                 self.map_data.append(line)
+
+    def change_level(self, lvl):
+        # kill all existing sprites first to save memory
+        for s in self.all_sprites:
+            s.kill()
+        # reset criteria for changing level
+        self.player1.moneybag = 0
+        # reset map data list to empty
+        self.map_data = []
+        # open next level
+        with open(path.join(self.game_folder, lvl), 'rt') as f:
+            for line in f:
+                print(line)
+                self.map_data.append(line)
+        # repopulate the level with stuff
+        for row, tiles in enumerate(self.map_data):
+            print(row)
+            for col, tile in enumerate(tiles):
+                print(col)
+                if tile == '1':
+                    print("a wall at", row, col)
+                    Wall(self, col, row)
+                if tile == 'P':
+                    self.player = Player(self, col, row)
+                if tile == 'C':
+                    Coin(self, col, row)
+                if tile == 'M':
+                    Mob(self, col, row)
+                if tile == 'U':
+                    PowerUp(self, col, row)
+
     # Create run method which runs the whole GAME
     def new(self):
         # create player
@@ -104,6 +138,8 @@ class Game:
 #  updates the sprites
     def update(self):
          self.all_sprites.update()
+         if self.player1.moneybag > 2:
+             self.change_level(LEVEL2)
 
     def draw_grid(self):
          for x in range(0, WIDTH, TILESIZE):
@@ -132,7 +168,7 @@ class Game:
 # made a start scree: Project 4
     def show_start_screen(self):
         self.screen.fill(BGCOLOR)
-        self.draw_text(self.screen, "Press any button to play", 24, BLUE, WIDTH/2 - 32, 2)
+        self.draw_text(self.screen, "Press any button to play", 48, BLUE, WIDTH/3.7, HEIGHT/2.2)
         pg.display.flip()
         self.wait_for_key()
     
