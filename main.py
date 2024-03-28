@@ -12,6 +12,7 @@ import os
 from math import floor
 # Makes me able to import pictures and graphics
 
+# First Project
 '''
 mob
 killwall
@@ -19,9 +20,19 @@ animated sprites
 start screen
 '''
 
+# Next Project
+'''
+new levels
+boss
+end of game
+new sprites
+powerups
+
+'''
+
 # added levels for different maps
-LEVEL1 = "level1.txt"
-LEVEL2 = "level2.txt"
+LEVEL1 = "lvl1.txt"
+LEVEL2 = "lvl2.txt"
 
 # Creating the Base blueprint
 class Game:
@@ -90,6 +101,8 @@ class Game:
                     Mob(self, col, row)
                 if tile == 'U':
                     PowerUp(self, col, row)
+                if tile == 'B':
+                    BossMob(self, col, row)
 
     # Create run method which runs the whole GAME
     def new(self):

@@ -238,6 +238,40 @@ class Mob(pg.sprite.Sprite):
                 self.vy *= -1
                 self.rect.y = self.y
 
+class BossMob(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.mobs
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+# made aanimated sprite: Project 3
+        self.frame = 0
+        self.frameDelay = 0.2
+        self.frames = os.listdir('./images/bossmob')
+
+        self.image = pg.transform.scale(pg.image.load(f'./images/bossmob/{self.frames[0]}'), (TILESIZE * 2, TILESIZE * 2))
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.vx, self.vy = 100, 100
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.speed = 1
+        
+
+    def collide_with_walls(self, dir):
+        if dir == 'x':
+            # print('colliding on the x')
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vx *= -1
+                self.rect.x = self.x
+        if dir == 'y':
+            # print('colliding on the y')
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vy *= -1
+                self.rect.y = self.y
+
 # created by Aayush edited by me
 # class Mob2(pg.sprite.Sprite):
 #     def __init__(self, game, target, x, y):
@@ -293,6 +327,7 @@ class Mob(pg.sprite.Sprite):
         if self.frameDelay <= 0:
             self.frame = (self.frame + 1) % len(self.frames)
             self.image = pg.transform.scale(pg.image.load(f'./images/mob/{self.frames[self.frame]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
+            self.image = pg.transform.scale(pg.image.load(f'./images/bossmob/{self.frames[self.frame]}'), (TILESIZE * 2, TILESIZE * 2))
             self.frameDelay = 0.2
         self.frameDelay -= self.game.dt
         # self.rect.x += 1
