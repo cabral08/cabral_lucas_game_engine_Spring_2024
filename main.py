@@ -73,6 +73,7 @@ class Game:
                 self.map_data.append(line)
 
     def change_level(self, lvl):
+        self.currlvl = lvl
         # kill all existing sprites first to save memory
         for s in self.all_sprites:
             s.kill()
@@ -101,8 +102,8 @@ class Game:
                     Mob(self, col, row)
                 if tile == 'U':
                     PowerUp(self, col, row)
-                if tile == 'B':
-                    BossMob(self, col, row)
+                # if tile == 'B':
+                #     BossMob(self, col, row)
 
     # Create run method which runs the whole GAME
     def new(self):
