@@ -6,32 +6,30 @@ import pygame as pg
 from settings import *
 from os import path
 vec =pg.math.Vector2
+from pygame.sprite import Sprite
 from pygame import Vector2
+
+SPRITESHEET = "theBell.png"
+
+dir = path.dirname(__file__)
+img_dir = path.join(dir, 'images')
+
+
+# sets up file with multiple images...
+class Spritesheet:
+    # utility class for loading and parsing spritesheets
+    def __init__(self, filename):
+        self.spritesheet = pg.image.load(filename).convert()
+
+    def get_image(self, x, y, width, height):
+        # grab an image out of a larger spritesheet
+        image = pg.Surface((width, height))
+        image.blit(self.spritesheet, (0, 0), (x, y, width, height))
+        # image = pg.transform.scale(image, (width, height))
+        image = pg.transform.scale(image, (width * 4, height * 4))
+        return image
+    
 #  This allows us to import pygame and imports game settings
-
-vec =pg.math.Vector2
-
-def collide_with_walls(sprite, group, dir):
-    if dir == 'x':
-        hits = pg.sprite.spritecollide(sprite, group, False)
-        if hits:
-            if hits[0].rect.centerx > sprite.rect.centerx:
-                sprite.pos.x = hits[0].rect.left - sprite.rect.width / 2
-            if hits[0].rect.centerx < sprite.rect.centerx:
-                sprite.pos.x = hits[0].rect.right + sprite.rect.width / 2
-            sprite.vel.x = 0
-            sprite.rect.centerx = sprite.pos.x
-    if dir == 'y':
-        hits = pg.sprite.spritecollide(sprite, group, False)
-        if hits:
-            if hits[0].rect.centery > sprite.rect.centery:
-                sprite.pos.y = hits[0].rect.top - sprite.rect.height / 2
-            if hits[0].rect.centery < sprite.rect.centery:
-                sprite.pos.y = hits[0].rect.bottom + sprite.rect.height / 2
-            sprite.vel.y = 0
-            sprite.rect.centery = sprite.pos.y
-
-
 #  PLayer class, subclass of pg.sprite.Sprite
 class Player(pg.sprite.Sprite):
     #  Initializes the player class
@@ -42,6 +40,8 @@ class Player(pg.sprite.Sprite):
         self.game = game
         #  makes dimensions for self.image
         self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.spritesheet = Spritesheet(path.join(img_dir, "theBell.png"))
+        self.load_images()
         #  fills self.image with color (GREEN)
         self.image.fill(GREEN)
         # 
@@ -52,10 +52,25 @@ class Player(pg.sprite.Sprite):
         self.moneybag = 0
         self.speed = 300
         self.hitpoints = 100
+
+    def animate(self):
+        now = pg.time.get_ticks()
+        if not self.jumping and not self.walking:
+            if now - self.last_update > 500:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.standing_frames)
+                bottom = self.rect.bottom
+                self.image = self.standing_frames[self.current_frame]
+                self.rect = self.image.get_rect()
+                self.rect.bottom = bottom
+        if self.jumping:
+            bottom = self.rect.bottom
+            self.image = self.jump_frame
+            self.rect = self.image.get_rect()
+            self.rect.bottom = bottom
     
    
     
-
     def get_keys(self):
         self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
@@ -76,7 +91,6 @@ class Player(pg.sprite.Sprite):
     #     if not self.collide_with_walls(dx, dy):
     #         self.x += dx
     #         self.y += dy
-
     # def collide_with_walls(self, dx=0, dy=0):
     #         for wall in self.game.walls:
     #             if wall.x == self.x + dx and wall.y == self.y + dy:
@@ -84,26 +98,26 @@ class Player(pg.sprite.Sprite):
     #         return False
             
     # checks collision for walls
-    def collide_with_walls(sprite, group, dir):
+    def collide_with_walls(self, dir):
         if dir == 'x':
-            hits = pg.sprite.spritecollide(sprite, group, False)
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
             if hits:
-                if hits[0].rect.centerx > sprite.rect.centerx:
-                    sprite.pos.x = hits[0].rect.left - sprite.rect.width / 2
-                if hits[0].rect.centerx < sprite.rect.centerx:
-                    sprite.pos.x = hits[0].rect.right + sprite.rect.width / 2
-                sprite.vel.x = 0
-                sprite.rect.centerx = sprite.pos.x
+                if self.vx > 0:
+                    self.x = hits[0].rect.left - self.rect.width 
+                if self.vx < 0:
+                    self.x = hits[0].rect.right
+                    # When I pressed s and d i went through walls but I switched the indentation to fix it
+                self.vx = 0
+                self.rect.x = self.x      
         if dir == 'y':
-            hits = pg.sprite.spritecollide(sprite, group, False)
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
             if hits:
-                if hits[0].rect.centery > sprite.rect.centery:
-                    sprite.pos.y = hits[0].rect.top - sprite.rect.height / 2
-                if hits[0].rect.centery < sprite.rect.centery:
-                    sprite.pos.y = hits[0].rect.bottom + sprite.rect.height / 2
-                sprite.vel.y = 0
-                sprite.rect.centery = sprite.pos.y
-
+                if self.vy > 0:
+                    self.y = hits[0].rect.top - self.rect.height
+                if self.vy < 0:
+                    self.y = hits[0].rect.bottom
+                self.vy = 0
+                self.rect.y = self.y 
     # made possible by Aayush's question!!!!
     def collide_with_group(self, group, kill):
         hits = pg.sprite.spritecollide(self, group, kill)
@@ -119,7 +133,6 @@ class Player(pg.sprite.Sprite):
             if str(hits[0].__class__.__name__) == "Mob":
                 print(hits[0].__class__.__name__)
                 print("Collided with mob")
-
     def collide_with_powerup(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.powerups, True)
@@ -130,8 +143,6 @@ class Player(pg.sprite.Sprite):
                     self.x = hits[0].rect.right
                     self.vx = 0
                     self.rect.x = self.x  
-
-
         if dir == 'y':
             hits = pg.sprite.spritecollide(self, self.game.powerups, True)
         if hits:
@@ -141,13 +152,9 @@ class Player(pg.sprite.Sprite):
                   self.y = hits[0].rect.bottom
                   self.vy = 0
                   self.rect.y = self.y 
-
-
     # def kill(self):
     #     self.x = self.game.Pcol*TILESIZE
     #     self.y = self.game.Prow*TILESIZE
-
-
     def update(self):
         self.get_keys()
         self.x += self.vx * self.game.dt
@@ -166,9 +173,7 @@ class Player(pg.sprite.Sprite):
         self.collide_with_group(self.game.power_ups, True)
         self.collide_with_group(self.game.killwall, False)
         self.collide_with_group(self.game.mobs, False)
-
         
-
 class Wall(pg.sprite.Sprite):
      def __init__(self, game, x, y):
             self.groups = game.all_sprites, game.walls
@@ -182,7 +187,6 @@ class Wall(pg.sprite.Sprite):
             self.y = y*TILESIZE + TILESIZE/2
             self.rect = self.image.get_rect(center=(self.x, self.y))
             
-
 #  made a killwall: project 1
 class KillWall(pg.sprite.Sprite):
      def __init__(self, game, x, y):
@@ -196,9 +200,7 @@ class KillWall(pg.sprite.Sprite):
             self.y = y
             self.rect.x = x * TILESIZE
             self.rect.y = y * TILESIZE
-
         
-
 # create new class for coin
 class Coin(pg.sprite.Sprite):
      def __init__(self, game, x, y):
@@ -212,7 +214,6 @@ class Coin(pg.sprite.Sprite):
             self.y = y
             self.rect.x = x * TILESIZE
             self.rect.y = y * TILESIZE
-
 class PowerUp(pg.sprite.Sprite):
      def __init__(self, game, x, y):
             self.groups = game.all_sprites, game.power_ups
@@ -231,11 +232,10 @@ class Mob(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        # made aanimated sprite: Project 3
+# made aanimated sprite: Project 3
         self.frame = 0
         self.frameDelay = 0.2
         self.frames = os.listdir('./images/mob')
-
         self.image = pg.transform.scale(pg.image.load(f'./images/mob/{self.frames[0]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
         self.rect = self.image.get_rect()
         self.x = x
@@ -244,55 +244,54 @@ class Mob(pg.sprite.Sprite):
         self.x = x * TILESIZE
         self.y = y * TILESIZE
         self.speed = 1
-
         
-    # def collide_with_walls(self, dir):
-    #     if dir == 'x':
-    #         # print('colliding on the x')
-    #         hits = pg.sprite.spritecollide(self, self.game.walls, False)
-    #         if hits:
-    #             self.vx *= -1
-    #             self.rect.x = self.x
-    #     if dir == 'y':
-    #         # print('colliding on the y')
-    #         hits = pg.sprite.spritecollide(self, self.game.walls, False)
-    #         if hits:
-    #             self.vy *= -1
-    #             self.rect.y = self.y
+    def collide_with_walls(self, dir):
+        if dir == 'x':
+            # print('colliding on the x')
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vx *= -1
+                self.rect.x = self.x
+        if dir == 'y':
+            # print('colliding on the y')
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vy *= -1
+                self.rect.y = self.y
 
-# class BossMob(pg.sprite.Sprite):
-#     def __init__(self, game, x, y):
-#         self.groups = game.all_sprites, game.mobs
-#         pg.sprite.Sprite.__init__(self, self.groups)
-#         self.game = game
-# # made aanimated sprite: Project 3
-#         self.frame = 0
-#         self.frameDelay = 0.2
-#         self.frames = os.listdir('./images/bossmob')
+class BossMob(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.mobs
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+# made aanimated sprite: Project 3
+        self.frame = 0
+        self.frameDelay = 0.2
+        self.frames = os.listdir('./images/bossmob')
 
-#         self.image = pg.transform.scale(pg.image.load(f'./images/bossmob/{self.frames[0]}'), (TILESIZE * 2, TILESIZE * 2))
-#         self.rect = self.image.get_rect()
-#         self.x = x
-#         self.y = y
-#         self.vx, self.vy = 100, 100
-#         self.x = x * TILESIZE
-#         self.y = y * TILESIZE
-#         self.speed = 1
-        
+        self.image = pg.transform.scale(pg.image.load(f'./images/bossmob/{self.frames[0]}'), (TILESIZE * 2, TILESIZE * 2))
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.vx, self.vy = 100, 100
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.speed = 1
 
-    # def collide_with_walls(self, dir):
-    #     if dir == 'x':
-    #         # print('colliding on the x')
-    #         hits = pg.sprite.spritecollide(self, self.game.walls, False)
-    #         if hits:
-    #             self.vx *= -1
-    #             self.rect.x = self.x
-    #     if dir == 'y':
-    #         # print('colliding on the y')
-    #         hits = pg.sprite.spritecollide(self, self.game.walls, False)
-    #         if hits:
-    #             self.vy *= -1
-    #             self.rect.y = self.y
+
+    def collide_with_walls(self, dir):
+        if dir == 'x':
+            # print('colliding on the x')
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vx *= -1
+                self.rect.x = self.x
+        if dir == 'y':
+            # print('colliding on the y')
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vy *= -1
+                self.rect.y = self.y
 
 # created by Aayush edited by me
 # class Mob2(pg.sprite.Sprite):
@@ -344,50 +343,26 @@ class Mob(pg.sprite.Sprite):
 #                     self.y = hits[0].rect.bottom
 #                 self.vy = 0
 #                 self.rect.y = self.y
-
     def update(self):
         if self.frameDelay <= 0:
             self.frame = (self.frame + 1) % len(self.frames)
             self.image = pg.transform.scale(pg.image.load(f'./images/mob/{self.frames[self.frame]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
-            # self.image = pg.transform.scale(pg.image.load(f'./images/bossmob/{self.frames[self.frame]}'), (TILESIZE * 2, TILESIZE * 2))
+            self.image = pg.transform.scale(pg.image.load(f'./images/bossmob/{self.frames[self.frame]}'), (TILESIZE * 2, TILESIZE * 2))
             self.frameDelay = 0.2
-        
-            # Mob tracking
-            self.rot = (self.game.player.rect.center - self.pos).angle_to(vec(1, 0))
-            # self.image = pg.transform.rotate(self.image, 45)
-            # self.rect = self.image.get_rect()
-            self.rect.center = self.pos
-            self.acc = vec(self.speed, 0).rotate(-self.rot)
-            self.acc += self.vel * -1
-            self.vel += self.acc * self.game.dt
-            self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
-            # self.hit_rect.centerx = self.pos.x
-            collide_with_walls(self, self.game.walls, 'x')
-            # self.hit_rect.centery = self.pos.y
-            collide_with_walls(self, self.game.walls, 'y')
-            # self.rect.center = self.hit_rect.center
-            # if self.health <= 0:
-            #     self.kill()
-        
-        
-        # # self.rect.center = self.hit_rect.center
-        # if self.health <= 0:
-        #         self.kill()
-        # self.frameDelay -= self.game.dt
-        #     # self.rect.x += 1
-        #     self.x += self.vx * self.game.dt
-        #     self.y += self.vy * self.game.dt
-        #     # changed play to player1 so it tracks me
-        #     if self.rect.x < self.game.player1.rect.x:
-        #         self.vx = 100
-        #     if self.rect.x > self.game.player1.rect.x:
-        #         self.vx = -100    
-        #     if self.rect.y < self.game.player1.rect.y:
-        #         self.vy = 100
-        #     if self.rect.y > self.game.player1.rect.y:
-        #         self.vy = -100
-        #     self.rect.x = self.x
-        #     self.collide_with_walls('x')
-        #     self.rect.y = self.y
-        #     self.collide_with_walls('y')
-
+        self.frameDelay -= self.game.dt
+        # self.rect.x += 1
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        # changed play to player1 so it tracks me
+        if self.rect.x < self.game.player1.rect.x:
+            self.vx = 100
+        if self.rect.x > self.game.player1.rect.x:
+            self.vx = -100    
+        if self.rect.y < self.game.player1.rect.y:
+            self.vy = 100
+        if self.rect.y > self.game.player1.rect.y:
+            self.vy = -100
+        self.rect.x = self.x
+        self.collide_with_walls('x')
+        self.rect.y = self.y
+        self.collide_with_walls('y')
