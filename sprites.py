@@ -11,8 +11,9 @@ from pygame import Vector2
 
 SPRITESHEET = "theBell.png"
 
-dir = path.dirname(__file__)
-img_dir = path.join(dir, 'images')
+# dir = path.dirname(__file__)
+# img_dir = path.join(dir, 'images')
+
 
 
 # sets up file with multiple images...
@@ -29,6 +30,9 @@ class Spritesheet:
         image = pg.transform.scale(image, (width * 4, height * 4))
         return image
     
+dir = path.dirname(__file__)
+img_dir = path.join(dir, 'images')
+    
 #  This allows us to import pygame and imports game settings
 #  PLayer class, subclass of pg.sprite.Sprite
 class Player(pg.sprite.Sprite):
@@ -40,12 +44,14 @@ class Player(pg.sprite.Sprite):
         self.game = game
         #  makes dimensions for self.image
         self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.spritesheet = Spritesheet(path.join(img_dir, "theBell.png"))
+        self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
         self.load_images()
         #  fills self.image with color (GREEN)
-        self.image.fill(GREEN)
-        # 
+        self.image = self.standing_frames[0]
+        # self.image.fill(GREEN)
         self.rect = self.image.get_rect()
+        self.current_frame = 0
+        self.last_update = 0
         self.vx, self.vy = 0, 0
         self.x = x * TILESIZE
         self.y = y * TILESIZE
