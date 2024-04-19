@@ -27,7 +27,7 @@ class Spritesheet:
         image = pg.Surface((width, height))
         image.blit(self.spritesheet, (0, 0), (x, y, width, height))
         # image = pg.transform.scale(image, (width, height))
-        image = pg.transform.scale(image, (width * 4, height * 4))
+        image = pg.transform.scale(image, (width * 1, height * 1))
         return image
     
 dir = path.dirname(__file__)
@@ -43,7 +43,7 @@ class Player(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         #  makes dimensions for self.image
-        self.image = pg.Surface((TILESIZE, TILESIZE))
+        # self.image = pg.Surface((TILESIZE, TILESIZE))
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
         self.load_images()
         #  fills self.image with color (GREEN)
@@ -74,7 +74,14 @@ class Player(pg.sprite.Sprite):
             self.image = self.jump_frame
             self.rect = self.image.get_rect()
             self.rect.bottom = bottom
-    
+    def load_images(self):
+        self.standing_frames = [self.spritesheet.get_image(0,0, 32, 32), 
+                                self.spritesheet.get_image(32,0, 32, 32)]
+        # for frame in self.standing_frames:
+        #     frame.set_colorkey(BLACK)
+
+        # add other frame sets for different poses etc.
+    # needed for animated sprite        
    
     
     def get_keys(self):
@@ -158,6 +165,7 @@ class Player(pg.sprite.Sprite):
                   self.y = hits[0].rect.bottom
                   self.vy = 0
                   self.rect.y = self.y 
+
     # def kill(self):
     #     self.x = self.game.Pcol*TILESIZE
     #     self.y = self.game.Prow*TILESIZE
