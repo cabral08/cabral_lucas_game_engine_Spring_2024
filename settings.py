@@ -1,3 +1,5 @@
+import pygame as pg
+
 
 WIDTH = 1024
 HEIGHT = 768
@@ -17,6 +19,14 @@ BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 PURPLE = (80, 0, 80)
 ORANGE = (255, 165, 0)
+HOTBAR_HEIGHT = 50
+ITEM_WIDTH = 50
+ITEM_HEIGHT = 50
+NUM_ITEMS = 5
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+MOB_HIT_RECT = pg.Rect(0,0,96,96)
+MOB_HITPOINTS = 32
 # adds the color for power up
 
 PLAYER_SPEED = 300

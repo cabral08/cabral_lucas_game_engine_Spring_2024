@@ -32,6 +32,35 @@ class Spritesheet:
     
 dir = path.dirname(__file__)
 img_dir = path.join(dir, 'images')
+
+def draw_health_bar(surf, x, y, pct):
+    if pct < 0:
+        pct = 0
+    BAR_LENGTH = 32
+    BAR_HEIGHT = 10
+    fill = (pct / 100) * BAR_LENGTH
+    outline_rect = pg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
+    fill_rect = pg.Rect(x, y, fill, BAR_HEIGHT)
+    pg.draw.rect(surf, GREEN, fill_rect)
+    pg.draw.rect(surf, WHITE, outline_rect, 2)
+
+class HealthBar(pg.sprite.Sprite):
+    def __init__(self, game, x, y, w, h, target, pct):
+        self.groups = game.all_sprites
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.w = w
+        self.h = h
+        self.image = pg.Surface((w, h))
+        self.rect = self.image.get_rect()
+        self.image.fill(GREEN)
+        self.rect.x = x
+        self.rect.y = y
+        self.target = target
+        self.pct = pct
+    def update(self):
+        self.rect.x = self.target.rect.x
+        self.rect.y = self.target.rect.y
     
 #  This allows us to import pygame and imports game settings
 #  PLayer class, subclass of pg.sprite.Sprite
@@ -58,6 +87,18 @@ class Player(pg.sprite.Sprite):
         self.moneybag = 0
         self.speed = 300
         self.hitpoints = 100
+        self.hitpoints = 100
+        self.healthbar = HealthBar(self.game, self.rect.x, self.rect.y, self.rect.w, 5, self, self.hitpoints)
+        self.cooling = False
+        def collide_with_group(self, group, kill):
+        hits = pg.sprite.spritecollide(self, group, kill)
+        if hits:
+            if str(hits[0].__class__.__name__) == "Mob":
+                hits[0].hitpoints -= 1
+                print(hits[0].hitpoints)
+            if str(hits[0].__class__.__name__) == "Mob2":
+                hits[0].hitpoints -= 1
+            # self.kill()
 
     def animate(self):
         now = pg.time.get_ticks()
@@ -240,6 +281,19 @@ class PowerUp(pg.sprite.Sprite):
             self.y = y
             self.rect.x = x * TILESIZE
             self.rect.y = y * TILESIZE
+class HealthPotion(pg.sprite.Sprite):
+     def __init__(self, game, x, y):
+            self.groups = game.all_sprites, game.power_ups
+            pg.sprite.Sprite.__init__(self, self.groups)
+            self.game = game
+            self.image = pg.Surface((TILESIZE, TILESIZE))
+            self.image.fill(RED)
+            self.rect = self.image.get_rect()
+            self.x = x
+            self.y = y
+            self.rect.x = x * TILESIZE
+            self.rect.y = y * TILESIZE
+
 # creating a mob class for an enemy: Project 2
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -256,8 +310,20 @@ class Mob(pg.sprite.Sprite):
         self.y = y * TILESIZE
         self.rect = self.image.get_rect(center=(x, y))
         self.vx, self.vy = 100, 100
-        
+        self.hitpoints = 32
         self.speed = 1
+    def draw_health(self):
+        if self.hitpoints > 31:
+            col = GREEN
+        elif self.hitpoints > 15:
+            col = YELLOW
+        else:
+            col = RED
+        width = int(self.rect.width * self.hitpoints / MOB_HITPOINTS)
+        self.health_bar = pg.Rect(0, 0, width, 7)
+        if self.hitpoints < MOB_HITPOINTS:
+            pg.draw.rect(self.image, col, self.health_bar)
+
         
     def collide_with_walls(self, dir):
         if dir == 'x':
