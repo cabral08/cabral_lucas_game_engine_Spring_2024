@@ -138,6 +138,14 @@ class Game:
                 if tile == 'P':
                     self.player1 = Player(self, col, row)
 
+    def drawWeaponOverlay(self):
+        for i, weapon in enumerate(self.player1.loadout):
+            box = pg.draw.rect(self.screen, GREEN if weapon.enabled else LIGHTGREY, (20 + 80*i, HEIGHT - 80, 60, 60), 3)
+            img = weapon.img_overlay.copy()
+            img_rect = img.get_rect(center=box.center)
+            self.screen.blit(img, img_rect)
+
+
    
     # Runs our game
     def run(self):
@@ -175,6 +183,8 @@ class Game:
           self.draw_grid()
           self.all_sprites.draw(self.screen)
           pg.display.flip()
+          self.drawWeaponOverlay
+          
 # Events such as moving, enemies spawning etc
     def events(self):
          for event in pg.event.get():
