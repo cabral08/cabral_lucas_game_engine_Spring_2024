@@ -69,11 +69,12 @@ class Game:
         '''
         with open(path.join(self.game_folder, 'lvl1.txt'), 'rt') as f:
             for line in f:
-                print(line)
+                # print(line)
                 self.map_data.append(line)
 
     def change_level(self, lvl):
         self.currlvl = lvl
+        
         # kill all existing sprites first to save memory
         for s in self.all_sprites:
             s.kill()
@@ -84,15 +85,15 @@ class Game:
         # open next level
         with open(path.join(self.game_folder, lvl), 'rt') as f:
             for line in f:
-                print(line)
+                # print(line)
                 self.map_data.append(line)
         # repopulate the level with stuff
         for row, tiles in enumerate(self.map_data):
-            print(row)
+            # print(row)
             for col, tile in enumerate(tiles):
-                print(col)
+                # print(col)
                 if tile == '1':
-                    print("a wall at", row, col)
+                    # print("a wall at", row, col)
                     Wall(self, col, row)
                 if tile == 'P':
                     self.player = Player(self, col, row)
@@ -100,6 +101,7 @@ class Game:
                     Coin(self, col, row)
                 if tile == 'M':
                     Mob(self, col, row)
+                    print("change level")
                 if tile == 'U':
                     PowerUp(self, col, row)
                 # if tile == 'B':
@@ -117,26 +119,25 @@ class Game:
         self.mobs = pg.sprite.Group()
         self.killwall = pg.sprite.Group()
         for row, tiles in enumerate(self.map_data):
-            print(row)
+            # print(row)
             for col, tile in enumerate(tiles):
-                print(col)
+                # print(col)
                 if tile == '1':
-                    print("a wall at", row, col)
+                    # print("a wall at", row, col)
                     Wall(self, col, row)
                 if tile == 'K':
-                    print("death at", row, col)
+                    # print("death at", row, col)
                     KillWall(self, col, row)
                 # spawns another player, but there are two
                 if tile == 'C':
                     Coin(self, col, row)
                 if tile == 'U':
                     PowerUp(self, col, row)
-                # if tile == 'M':
-                #     Mob2(self, col, row)
-                if tile == 'P':
-                    self.player1 = Player(self, col, row)
                 if tile == 'M':
                     Mob(self, col, row)
+                if tile == 'P':
+                    self.player1 = Player(self, col, row)
+
    
     # Runs our game
     def run(self):

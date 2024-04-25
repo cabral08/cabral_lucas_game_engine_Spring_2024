@@ -243,6 +243,7 @@ class PowerUp(pg.sprite.Sprite):
 # creating a mob class for an enemy: Project 2
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        print("mob created")
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -251,12 +252,11 @@ class Mob(pg.sprite.Sprite):
         self.frameDelay = 0.2
         self.frames = os.listdir('./images/mob')
         self.image = pg.transform.scale(pg.image.load(f'./images/mob/{self.frames[0]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
-        self.rect = self.image.get_rect()
-        self.x = x
-        self.y = y
-        self.vx, self.vy = 100, 100
         self.x = x * TILESIZE
         self.y = y * TILESIZE
+        self.rect = self.image.get_rect(center=(x, y))
+        self.vx, self.vy = 100, 100
+        
         self.speed = 1
         
     def collide_with_walls(self, dir):
@@ -272,6 +272,25 @@ class Mob(pg.sprite.Sprite):
             if hits:
                 self.vy *= -1
                 self.rect.y = self.y
+
+    def update(self):
+        # self.rect.x += 1
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        # changed play to player1 so it tracks me
+        if self.rect.x < self.game.player1.rect.x:
+            self.vx = 100
+        if self.rect.x > self.game.player1.rect.x:
+            self.vx = -100    
+        if self.rect.y < self.game.player1.rect.y:
+            self.vy = 100
+        if self.rect.y > self.game.player1.rect.y:
+            self.vy = -100
+        self.rect.x = self.x
+        self.collide_with_walls('x')
+        self.rect.y = self.y
+        self.collide_with_walls('y')
+
 
 class BossMob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
