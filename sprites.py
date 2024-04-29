@@ -90,7 +90,7 @@ class Player(pg.sprite.Sprite):
         self.hitpoints = 100
         self.healthbar = HealthBar(self.game, self.rect.x, self.rect.y, self.rect.w, 5, self, self.hitpoints)
         self.cooling = False
-        def collide_with_group(self, group, kill):
+    def collide_with_group(self, group, kill):
         hits = pg.sprite.spritecollide(self, group, kill)
         if hits:
             if str(hits[0].__class__.__name__) == "Mob":
@@ -363,7 +363,6 @@ class BossMob(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-# made aanimated sprite: Project 3
         self.frame = 0
         self.frameDelay = 0.2
         self.frames = os.listdir('./images/bossmob')

@@ -24,8 +24,6 @@ start screen
 '''
 new levels
 boss
-end of game
-new sprites
 powerups
 
 '''
