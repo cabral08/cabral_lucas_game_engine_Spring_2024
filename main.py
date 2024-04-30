@@ -23,9 +23,12 @@ start screen
 # Next Project
 '''
 new levels
-boss
 powerups
 
+'''
+# Final addition
+'''
+shop
 '''
 
 # added levels for different maps
