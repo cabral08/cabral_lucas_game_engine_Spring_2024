@@ -12,7 +12,7 @@ import os
 from math import floor
 # Makes me able to import pictures and graphics
 
-# First Project
+# Alpha Project
 '''
 mob
 killwall
@@ -20,9 +20,9 @@ animated sprites
 start screen
 '''
 
-# Next Project
+# Beta Project
 '''
-new levels
+new level
 powerups
 
 '''
