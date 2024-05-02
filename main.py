@@ -22,9 +22,7 @@ start screen
 
 # Beta Project
 '''
-new level
-powerups
-
+new level/s
 '''
 # Final addition
 '''
