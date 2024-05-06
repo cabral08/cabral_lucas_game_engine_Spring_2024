@@ -108,6 +108,88 @@ class Game:
                 # if tile == 'B':
                 #     BossMob(self, col, row)
 
+    # def __init__(self):
+    #     # Initialize Pygame and set up other attributes...
+    #     self.shop_open = False
+
+    # def events(self):
+    #     for event in pg.event.get():
+    #         if event.type == pg.QUIT:
+    #             self.quit()
+    #         elif event.type == pg.KEYUP:
+    #             if event.key == pg.K_s:  # Press 'S' key to open the shop
+    #                 self.shop_open = True
+    #             elif event.key == pg.K_ESCAPE:  # Press 'Escape' key to close the shop
+    #                 self.shop_open = False
+    #     self.shop_items = {
+    #         "Sword": 50,
+    #         "Shield": 30,
+    #         "Potion": 20
+    #     }
+    #     self.player_money = 100
+    #     self.player_inventory = []
+
+    # def draw_shop(self):
+    #     self.screen.fill(BGCOLOR)
+    #     self.draw_text(self.screen, "Welcome to the Shop", 48, BLUE, WIDTH/3.7, HEIGHT/2.2)
+    #     # Display shop items and prices
+    #     y = HEIGHT / 2
+    #     for item, price in self.shop_items.items():
+    #         self.draw_text(self.screen, f"{item}: ${price}", 24, WHITE, WIDTH/3, y)
+    #         y += 30
+    #     # Display player's money
+    #     self.draw_text(self.screen, f"Your Money: ${self.player_money}", 24, WHITE, WIDTH/3, y+30)
+
+    # def shop(self):
+    #     self.show_start_screen()
+    #     while True:
+    #         self.draw_shop()
+    #         pg.display.flip()
+    #         for event in pg.event.get():
+    #             if event.type == pg.QUIT:
+    #                 self.quit()
+    #             elif event.type == pg.KEYUP:
+    #                 if event.key == pg.K_SPACE:
+    #                     return
+
+    # def buy_item(self, item):
+    #     if item in self.shop_items:
+    #         price = self.shop_items[item]
+    #         if self.player_money >= price:
+    #             self.player_money -= price
+    #             self.player_inventory.append(item)
+    #             print(f"You bought {item} for ${price}")
+    #         else:
+    #             print("Not enough money!")
+    #     else:
+    #         print("Item not found in the shop.")
+
+    # def show_inventory(self):
+    #     print("Inventory:")
+    #     for item in self.player_inventory:
+    #         print("-", item)
+
+    # def run(self):
+    #     self.playing = True
+    #     while self.playing:
+    #         # Run game logic...
+    #         if need_to_open_shop:
+    #             self.shop()
+    #             need_to_open_shop = False
+    #         if need_to_display_inventory:
+    #             self.show_inventory()
+    #             need_to_display_inventory = False
+
+    # def run(self):
+    #     self.playing = True
+    #     while self.playing:
+    #         self.events()
+    #         if self.shop_open:
+    #             self.shop()
+    #         else:
+    #             # Run other game logic...
+    #             pass
+
     # Create run method which runs the whole GAME
     def new(self):
         # create player

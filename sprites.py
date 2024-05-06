@@ -391,6 +391,8 @@ class BossMob(pg.sprite.Sprite):
                 self.vy *= -1
                 self.rect.y = self.y
 
+    
+
 # created by Aayush edited by me
 # class Mob2(pg.sprite.Sprite):
 #     def __init__(self, game, target, x, y):
