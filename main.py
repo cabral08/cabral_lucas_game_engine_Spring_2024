@@ -191,6 +191,7 @@ class Game:
         self.power_ups = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
         self.killwall = pg.sprite.Group()
+        self.traps = pg.sprite.Group()
         for row, tiles in enumerate(self.map_data):
             # print(row)
             for col, tile in enumerate(tiles):
@@ -210,6 +211,9 @@ class Game:
                     Mob(self, col, row)
                 if tile == 'P':
                     self.player1 = Player(self, col, row)
+                if tile == 'T':
+                    PlantTrap(self, col, row)
+                
 
     # def drawWeaponOverlay(self):
     #         for i, item in enumerate(self.player1.loadout):

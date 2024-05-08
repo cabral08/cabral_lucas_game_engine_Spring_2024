@@ -200,6 +200,8 @@ class Player(pg.sprite.Sprite):
             if str(hits[0].__class__.__name__) == "Mob":
                 print(hits[0].__class__.__name__)
                 print("Collided with mob")
+            if str(hits[0].__class__.__name__) == "PlantTrap":
+                print(hits[0].__class__.__name__)
     def collide_with_powerup(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.powerups, True)
@@ -241,6 +243,7 @@ class Player(pg.sprite.Sprite):
         self.collide_with_group(self.game.power_ups, True)
         self.collide_with_group(self.game.killwall, False)
         self.collide_with_group(self.game.mobs, False)
+        self.collide_with_group(self.game.traps, False)
         
 class Wall(pg.sprite.Sprite):
      def __init__(self, game, x, y):
@@ -308,7 +311,7 @@ class HealthPotion(pg.sprite.Sprite):
             self.rect.y = y * TILESIZE
 class PlantTrap(pg.sprite.Sprite):
     def __init__(self, game, x, y):
-            self.groups = game.all_sprites, game.walls
+            self.groups = game.all_sprites, game.traps
             pg.sprite.Sprite.__init__(self, self.groups)
             self.game = game
             self.image = pg.Surface((TILESIZE, TILESIZE))
