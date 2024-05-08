@@ -139,7 +139,20 @@ class Player(pg.sprite.Sprite):
         if self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
             self.vy *= 0.7071
+        if keys[pg.K_m]:  # Press 'M' key to open the shop
+            self.shop_open = True
+        elif keys[pg.K_ESCAPE]:  # Press 'Escape' key to close the shop
+            self.shop_open = False
          
+        def run(self):
+         self.playing = True
+        while self.playing:
+            self.get_keys()
+            if self.shop_open:
+                self.shop()
+            else:
+                # Run other game logic...
+                pass
         
     # def move(self, dx=0, dy=0):
     #     if not self.collide_with_walls(dx, dy):
