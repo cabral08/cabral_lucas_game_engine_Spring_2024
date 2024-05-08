@@ -306,7 +306,17 @@ class HealthPotion(pg.sprite.Sprite):
             self.y = y
             self.rect.x = x * TILESIZE
             self.rect.y = y * TILESIZE
-
+class PlantTrap(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+            self.groups = game.all_sprites, game.walls
+            pg.sprite.Sprite.__init__(self, self.groups)
+            self.game = game
+            self.image = pg.Surface((TILESIZE, TILESIZE))
+            self.image = pg.transform.scale(pg.image.load(path.join(self.game.img_folder, 'planttrap.png')).convert_alpha(), (TILESIZE, TILESIZE))
+            self.x = x*TILESIZE + TILESIZE/2
+            self.y = y*TILESIZE + TILESIZE/2
+            self.rect = self.image.get_rect(center=(self.x, self.y))
+    
 # creating a mob class for an enemy: Project 2
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):

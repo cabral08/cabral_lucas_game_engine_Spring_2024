@@ -114,6 +114,8 @@ class Game:
                     PowerUp(self, col, row)
                 if tile == 'H':
                     HealthPotion(self, col, row)
+                if tile == 'T':
+                    PlantTrap(self, col, row)
                 # if tile == 'B':
                 #     BossMob(self, col, row)
 
