@@ -116,6 +116,8 @@ class Game:
                     HealthPotion(self, col, row)
                 if tile == 'T':
                     PlantTrap(self, col, row)
+                if tile == 'S':
+                    SpikeTrap(self, col, row)
                 # if tile == 'B':
                 #     BossMob(self, col, row)
 
@@ -209,10 +211,10 @@ class Game:
                     PowerUp(self, col, row)
                 if tile == 'M':
                     Mob(self, col, row)
-                if tile == 'P':
-                    self.player1 = Player(self, col, row)
                 if tile == 'T':
                     PlantTrap(self, col, row)
+                if tile == 'S':
+                    SpikeTrap(self, col, row)
                 
 
     # def drawWeaponOverlay(self):
