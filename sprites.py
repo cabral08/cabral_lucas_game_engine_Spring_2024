@@ -202,8 +202,8 @@ class Player(pg.sprite.Sprite):
                 print("Collided with mob")
             if str(hits[0].__class__.__name__) == "PlantTrap":
                 print(hits[0].__class__.__name__)
-            if str(hits[0].__class__.__name__) == "SpikeTrap":
-                print(hits[0].__class__.__name__)
+            # if str(hits[0].__class__.__name__) == "SpikeTrap":
+            #     print(hits[0].__class__.__name__)
     def collide_with_powerup(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.powerups, True)
@@ -321,16 +321,16 @@ class PlantTrap(pg.sprite.Sprite):
             self.x = x*TILESIZE + TILESIZE/2
             self.y = y*TILESIZE + TILESIZE/2
             self.rect = self.image.get_rect(center=(self.x, self.y))
-class SpikeTrap(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
-            self.groups = game.all_sprites, game.traps
-            pg.sprite.Sprite.__init__(self, self.groups)
-            self.game = game
-            self.image = pg.Surface((TILESIZE, TILESIZE))
-            self.image = pg.transform.scale(pg.image.load(path.join(self.game.img_folder, 'SpikeTrap.png')).convert_alpha(), (TILESIZE, TILESIZE))
-            self.x = x*TILESIZE + TILESIZE/2
-            self.y = y*TILESIZE + TILESIZE/2
-            self.rect = self.image.get_rect(center=(self.x, self.y))
+# class SpikeTrap(pg.sprite.Sprite):
+#     def __init__(self, game, x, y):
+#             self.groups = game.all_sprites, game.traps
+#             pg.sprite.Sprite.__init__(self, self.groups)
+#             self.game = game
+#             self.image = pg.Surface((TILESIZE, TILESIZE))
+#             self.image = pg.transform.scale(pg.image.load(path.join(self.game.img_folder, 'SpikeTrap.png')).convert_alpha(), (TILESIZE, TILESIZE))
+#             self.x = x*TILESIZE + TILESIZE/2
+#             self.y = y*TILESIZE + TILESIZE/2
+#             self.rect = self.image.get_rect(center=(self.x, self.y))
     
 # creating a mob class for an enemy: Project 2
 class Mob(pg.sprite.Sprite):
@@ -379,21 +379,27 @@ class Mob(pg.sprite.Sprite):
 
     def update(self):
         # self.rect.x += 1
-        self.x += self.vx * self.game.dt
-        self.y += self.vy * self.game.dt
-        # changed play to player1 so it tracks me
-        if self.rect.x < self.game.player1.rect.x:
-            self.vx = 100
-        if self.rect.x > self.game.player1.rect.x:
-            self.vx = -100    
-        if self.rect.y < self.game.player1.rect.y:
-            self.vy = 100
-        if self.rect.y > self.game.player1.rect.y:
-            self.vy = -100
-        self.rect.x = self.x
-        self.collide_with_walls('x')
-        self.rect.y = self.y
-        self.collide_with_walls('y')
+        if self.frameDelay <= 0:
+    #         self.frame = (self.frame + 1) % len(self.frames)
+    #         self.image = pg.transform.scale(pg.image.load(f'./images/mob/{self.frames[self.frame]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
+    #         self.image = pg.transform.scale(pg.image.load(f'./images/bossmob/{self.frames[self.frame]}'), (TILESIZE * 2, TILESIZE * 2))
+    #         self.frameDelay = 0.2
+    #     self.frameDelay -= self.game.dt
+            self.x += self.vx * self.game.dt
+            self.y += self.vy * self.game.dt
+            # changed play to player1 so it tracks me
+            if self.rect.x < self.game.player.rect.x:
+                self.vx = 100
+            if self.rect.x > self.game.player.rect.x:
+                self.vx = -100    
+            if self.rect.y < self.game.player.rect.y:
+                self.vy = 100
+            if self.rect.y > self.game.player.rect.y:
+                self.vy = -100
+            self.rect.x = self.x
+            self.collide_with_walls('x')
+            self.rect.y = self.y
+            self.collide_with_walls('y')
 
 
 # class BossMob(pg.sprite.Sprite):
@@ -481,26 +487,26 @@ class Mob(pg.sprite.Sprite):
 #                     self.y = hits[0].rect.bottom
 #                 self.vy = 0
 #                 self.rect.y = self.y
-    def update(self):
-        if self.frameDelay <= 0:
-            self.frame = (self.frame + 1) % len(self.frames)
-            self.image = pg.transform.scale(pg.image.load(f'./images/mob/{self.frames[self.frame]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
-            self.image = pg.transform.scale(pg.image.load(f'./images/bossmob/{self.frames[self.frame]}'), (TILESIZE * 2, TILESIZE * 2))
-            self.frameDelay = 0.2
-        self.frameDelay -= self.game.dt
-        # self.rect.x += 1
-        self.x += self.vx * self.game.dt
-        self.y += self.vy * self.game.dt
-        # changed play to player1 so it tracks me
-        if self.rect.x < self.game.player1.rect.x:
-            self.vx = 100
-        if self.rect.x > self.game.player1.rect.x:
-            self.vx = -100    
-        if self.rect.y < self.game.player1.rect.y:
-            self.vy = 100
-        if self.rect.y > self.game.player1.rect.y:
-            self.vy = -100
-        self.rect.x = self.x
-        self.collide_with_walls('x')
-        self.rect.y = self.y
-        self.collide_with_walls('y')
+    # def update(self):
+    #     if self.frameDelay <= 0:
+    #         self.frame = (self.frame + 1) % len(self.frames)
+    #         self.image = pg.transform.scale(pg.image.load(f'./images/mob/{self.frames[self.frame]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
+    #         self.image = pg.transform.scale(pg.image.load(f'./images/bossmob/{self.frames[self.frame]}'), (TILESIZE * 2, TILESIZE * 2))
+    #         self.frameDelay = 0.2
+    #     self.frameDelay -= self.game.dt
+    #     # self.rect.x += 1
+    #     self.x += self.vx * self.game.dt
+    #     self.y += self.vy * self.game.dt
+    #     # changed play to player1 so it tracks me
+    #     if self.rect.x < self.game.player.rect.x:
+    #         self.vx = 100
+    #     if self.rect.x > self.game.player.rect.x:
+    #         self.vx = -100    
+    #     if self.rect.y < self.game.player.rect.y:
+    #         self.vy = 100
+    #     if self.rect.y > self.game.player.rect.y:
+    #         self.vy = -100
+    #     self.rect.x = self.x
+    #     self.collide_with_walls('x')
+    #     self.rect.y = self.y
+    #     self.collide_with_walls('y')

@@ -26,7 +26,7 @@ new level/s
 '''
 # Final addition
 '''
-shop
+Traps/Challenges
 '''
 
 # added levels for different maps
@@ -87,7 +87,7 @@ class Game:
         for s in self.all_sprites:
             s.kill()
         # reset criteria for changing level
-        self.player1.moneybag = 0
+        # self.player1.moneybag = 0
         # reset map data list to empty
         self.map_data = []
         # open next level
@@ -116,8 +116,8 @@ class Game:
                     HealthPotion(self, col, row)
                 if tile == 'T':
                     PlantTrap(self, col, row)
-                if tile == 'S':
-                    SpikeTrap(self, col, row)
+                # if tile == 'S':
+                #     SpikeTrap(self, col, row)
                 # if tile == 'B':
                 #     BossMob(self, col, row)
 
@@ -213,8 +213,8 @@ class Game:
                     Mob(self, col, row)
                 if tile == 'T':
                     PlantTrap(self, col, row)
-                if tile == 'S':
-                    SpikeTrap(self, col, row)
+                # if tile == 'S':
+                #     SpikeTrap(self, col, row)
                 
 
     # def drawWeaponOverlay(self):
@@ -240,7 +240,7 @@ class Game:
 #  updates the sprites
     def update(self):
          self.all_sprites.update()
-         if self.player1.moneybag > 2:
+         if self.player.moneybag > 2:
              self.change_level(LEVEL2)
 
     def draw_grid(self):
