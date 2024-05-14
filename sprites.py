@@ -1,3 +1,4 @@
+
 #  This file was created by: Lucas Cabral
 #  This code was inspired by Zelda and informed by Chris Bradfield
 # import os
@@ -344,9 +345,11 @@ class Mob(pg.sprite.Sprite):
         self.frameDelay = 0.2
         self.frames = os.listdir('./images/mob')
         self.image = pg.transform.scale(pg.image.load(f'./images/mob/{self.frames[0]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
+        self.rect = self.image.get_rect(center=(x, y))
         self.x = x * TILESIZE
         self.y = y * TILESIZE
-        self.rect = self.image.get_rect(center=(x, y))
+        self.rect.x = self.x
+        self.rect.y = self.y
         self.vx, self.vy = 100, 100
         self.hitpoints = 32
         self.speed = 1
@@ -379,27 +382,27 @@ class Mob(pg.sprite.Sprite):
 
     def update(self):
         # self.rect.x += 1
-        if self.frameDelay <= 0:
+        # if self.frameDelay <= 0:
     #         self.frame = (self.frame + 1) % len(self.frames)
     #         self.image = pg.transform.scale(pg.image.load(f'./images/mob/{self.frames[self.frame]}'), (TILESIZE * 1.5, TILESIZE * 1.5))
     #         self.image = pg.transform.scale(pg.image.load(f'./images/bossmob/{self.frames[self.frame]}'), (TILESIZE * 2, TILESIZE * 2))
     #         self.frameDelay = 0.2
     #     self.frameDelay -= self.game.dt
-            self.x += self.vx * self.game.dt
-            self.y += self.vy * self.game.dt
-            # changed play to player1 so it tracks me
-            if self.rect.x < self.game.player.rect.x:
-                self.vx = 100
-            if self.rect.x > self.game.player.rect.x:
-                self.vx = -100    
-            if self.rect.y < self.game.player.rect.y:
-                self.vy = 100
-            if self.rect.y > self.game.player.rect.y:
-                self.vy = -100
-            self.rect.x = self.x
-            self.collide_with_walls('x')
-            self.rect.y = self.y
-            self.collide_with_walls('y')
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        # changed play to player1 so it tracks me
+        if self.rect.x < self.game.player.rect.x:
+            self.vx = 100
+        if self.rect.x > self.game.player.rect.x:
+            self.vx = -100    
+        if self.rect.y < self.game.player.rect.y:
+            self.vy = 100
+        if self.rect.y > self.game.player.rect.y:
+            self.vy = -100
+        self.rect.x = self.x
+        self.collide_with_walls('x')
+        self.rect.y = self.y
+        self.collide_with_walls('y')
 
 
 # class BossMob(pg.sprite.Sprite):

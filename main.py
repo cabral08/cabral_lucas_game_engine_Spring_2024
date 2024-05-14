@@ -1,3 +1,5 @@
+
+
 # This file was created by: Lucas Cabral
 # Added this comment to prove github is working
 # new stuff
@@ -44,7 +46,6 @@ class Game:
         #  Setting up pygame clock
         self.clock = pg.time.Clock()
         # Boolean to check whether game is running or not
-        self.load_data()
 
         # self.shop_open = False
         # self.shop_items = {
@@ -185,6 +186,7 @@ class Game:
     # Create run method which runs the whole GAME
     def new(self):
         # create player
+        self.load_data()
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         #self.all_sprites.add(self.player1)
@@ -205,6 +207,8 @@ class Game:
                     # print("death at", row, col)
                     KillWall(self, col, row)
                 # spawns another player, but there are two
+                if tile == 'P':
+                    self.player = Player(self, col, row)
                 if tile == 'C':
                     Coin(self, col, row)
                 if tile == 'U':
