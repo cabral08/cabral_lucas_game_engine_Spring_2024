@@ -117,8 +117,8 @@ class Game:
                     HealthPotion(self, col, row)
                 if tile == 'T':
                     PlantTrap(self, col, row)
-                # if tile == 'S':
-                #     SpikeTrap(self, col, row)
+                if tile == 'S':
+                    SpikeTrap(self, col, row)
                 # if tile == 'B':
                 #     BossMob(self, col, row)
 
@@ -217,8 +217,8 @@ class Game:
                     Mob(self, col, row)
                 if tile == 'T':
                     PlantTrap(self, col, row)
-                # if tile == 'S':
-                #     SpikeTrap(self, col, row)
+                if tile == 'S':
+                    SpikeTrap(self, col, row)
                 
 
     # def drawWeaponOverlay(self):
@@ -246,7 +246,7 @@ class Game:
          self.all_sprites.update()
          if self.player.moneybag > 2:
              self.change_level(LEVEL2)
-
+    # Draws new level
     def draw_grid(self):
          for x in range(0, WIDTH, TILESIZE):
               pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))

@@ -9,6 +9,7 @@ from os import path
 vec =pg.math.Vector2
 from pygame.sprite import Sprite
 from pygame import Vector2
+from utils import *
 
 SPRITESHEET = "theBell.png"
 
@@ -85,12 +86,14 @@ class Player(pg.sprite.Sprite):
         self.vx, self.vy = 0, 0
         self.x = x * TILESIZE
         self.y = y * TILESIZE
+        self.cooldown = Timer(game)
         self.moneybag = 0
         self.speed = 300
         self.hitpoints = 100
         self.hitpoints = 100
         self.healthbar = HealthBar(self.game, self.rect.x, self.rect.y, self.rect.w, 5, self, self.hitpoints)
         self.cooling = False
+        self.stop = False
     def collide_with_group(self, group, kill):
         hits = pg.sprite.spritecollide(self, group, kill)
         if hits:
@@ -202,9 +205,14 @@ class Player(pg.sprite.Sprite):
                 print(hits[0].__class__.__name__)
                 print("Collided with mob")
             if str(hits[0].__class__.__name__) == "PlantTrap":
+                print(hits[0].__class__.__name__)            
+            if str(hits[0].__class__.__name__) == "SpikeTrap":
                 print(hits[0].__class__.__name__)
-            # if str(hits[0].__class__.__name__) == "SpikeTrap":
-            #     print(hits[0].__class__.__name__)
+                self.hitpoints -= 20
+                self.vx, self.vy = 0,0
+                self.cooldown.cd = 5
+                self.cooling  = True
+                self.stop = True
     def collide_with_powerup(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.powerups, True)
@@ -229,7 +237,8 @@ class Player(pg.sprite.Sprite):
     #     self.x = self.game.Pcol*TILESIZE
     #     self.y = self.game.Prow*TILESIZE
     def update(self):
-        self.get_keys()
+        if not self.stop:
+            self.get_keys()
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
         self.rect.x = self.x 
@@ -246,7 +255,15 @@ class Player(pg.sprite.Sprite):
         self.collide_with_group(self.game.power_ups, True)
         self.collide_with_group(self.game.killwall, False)
         self.collide_with_group(self.game.mobs, False)
-        self.collide_with_group(self.game.traps, False)
+        # self.collide_with_group(self.game.traps, False)
+        self.cooldown.countdown()
+        if self.cooldown.cd < 3:
+            self.stop = False
+        if self.cooldown.cd < 1:
+            self.cooling = False
+        if not self.cooling:
+            self.collide_with_group(self.game.power_ups, True)
+            self.collide_with_group(self.game.traps, True)
         
 class Wall(pg.sprite.Sprite):
      def __init__(self, game, x, y):
@@ -312,6 +329,7 @@ class HealthPotion(pg.sprite.Sprite):
             self.y = y
             self.rect.x = x * TILESIZE
             self.rect.y = y * TILESIZE
+        # Final Ideation of Traps
 class PlantTrap(pg.sprite.Sprite):
     def __init__(self, game, x, y):
             self.groups = game.all_sprites, game.traps
@@ -322,16 +340,17 @@ class PlantTrap(pg.sprite.Sprite):
             self.x = x*TILESIZE + TILESIZE/2
             self.y = y*TILESIZE + TILESIZE/2
             self.rect = self.image.get_rect(center=(self.x, self.y))
-# class SpikeTrap(pg.sprite.Sprite):
-#     def __init__(self, game, x, y):
-#             self.groups = game.all_sprites, game.traps
-#             pg.sprite.Sprite.__init__(self, self.groups)
-#             self.game = game
-#             self.image = pg.Surface((TILESIZE, TILESIZE))
-#             self.image = pg.transform.scale(pg.image.load(path.join(self.game.img_folder, 'SpikeTrap.png')).convert_alpha(), (TILESIZE, TILESIZE))
-#             self.x = x*TILESIZE + TILESIZE/2
-#             self.y = y*TILESIZE + TILESIZE/2
-#             self.rect = self.image.get_rect(center=(self.x, self.y))
+        # Added a spike trap 
+class SpikeTrap(pg.sprite.Sprite):
+     def __init__(self, game, x, y):
+            self.groups = game.all_sprites, game.traps
+            pg.sprite.Sprite.__init__(self, self.groups)
+            self.game = game
+            self.image = pg.Surface((TILESIZE, TILESIZE))
+            self.image = pg.transform.scale(pg.image.load(path.join(self.game.img_folder, 'SpikeTrap.png')).convert_alpha(), (TILESIZE, TILESIZE))
+            self.x = x*TILESIZE + TILESIZE/2
+            self.y = y*TILESIZE + TILESIZE/2
+            self.rect = self.image.get_rect(center=(self.x, self.y))
     
 # creating a mob class for an enemy: Project 2
 class Mob(pg.sprite.Sprite):
